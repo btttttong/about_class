@@ -5,18 +5,20 @@ inventory = {'coffee': 100, 'water': 300, 'milk': 300, 'money': 0}
 coins = {'dollar': 1.00, 'quarters': 0.25, 'dimes': 0.10, 'nickles': 0.05, 'pennies': 0.01}
 
 
-def check_resources(user_choice):
-    print(menu['user_choice'])
-    for k, v in inventory:
-        print(k)
-        # ingmenu = menu['menu'][k]
-        # print(ingmenu)
+def check_resources(user_choice):  # latte
+    user_choice = menu[user_choice]['ingredients']
+    print(user_choice)
 
-        # if k in menu['ingredients'][k] and menu['ingredients'][k] <= v:
-        #     print(f'this {k} and ')
-        #
+    result_dict = {}
+    for key in inventory:
+        if inventory[key] and user_choice[key]:
+            if inventory[key] >= user_choice[key]:
+                inventory[key] -= user_choice[key]
+            else:
+                print('cannot make coffee')
+                return False
 
-    return
+    print(inventory)
 
 
 def make_coffee(user_choice):
@@ -32,6 +34,7 @@ def process_coins(price):
     while need_to_pay > 0:
         print(f'You need to pay: {need_to_pay}')
         user_coin = input('your coin: (dollar/quarters/dimes/nickles/pennies)') or 'dollar'
+        print(f'you paid {user_coin}')
         if user_coin in coins:
             if user_coin == 'dollar':
                 need_to_pay -= coins['dollar']
@@ -55,7 +58,8 @@ def process_coins(price):
 
 
 def print_report():
-    return
+    for k, v in inventory.items():
+        print(f'{k}: {v}')
 
 
 cmd = ''
@@ -65,9 +69,16 @@ while cmd != 'off':
     if user_choice in menu:
         print('you need to pay: ', menu[user_choice]['price'])
         paid = process_coins(menu[user_choice]['price'])
-        canmakeorder = make_coffee(menu[user_choice])
-        if paid:
+        avalible = check_resources(user_choice)
+        if paid and avalible:
             make_coffee(user_choice)
 
+    elif user_choice == 'report':
+        print_report()
+
+    elif user_choice == 'off':
+        cmd = 'off'
+        print('Machine is shutting down, BYE!')
+        break
     else:
         print('invalid input')
