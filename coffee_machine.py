@@ -23,19 +23,13 @@ def check_resources(user_choice):  # latte
         return True
 
 
-def make_coffee(user_choice):
+def make_coffee(user_choice, money):
     dict_user_choice = menu[user_choice]['ingredients']
-    for key in inventory:
+    for key in dict_user_choice:
         if inventory[key] and dict_user_choice[key]:
-            if key == 'money':
-                print(inventory['money'])
-                print(menu[user_choice]['price'])
-                inventory[key] += menu[user_choice]['price']
-            else:
-                inventory[key] -= dict_user_choice[key]
+            inventory[key] -= dict_user_choice[key]
 
-
-    # inventory['money'] += menu[user_choice]['price']
+    inventory['money'] += money
     print(f'Here is your {user_choice}. Enjoy')
     return
 
@@ -101,7 +95,7 @@ while cmd != 'off':
             paid = process_coins(menu[user_choice]['price'])
 
             if paid and avalible:
-                make_coffee(user_choice)
+                make_coffee(user_choice, menu[user_choice]['price'])
                 print_report()
 
     elif user_choice == 'report':
